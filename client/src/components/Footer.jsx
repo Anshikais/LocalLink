@@ -13,18 +13,18 @@ export default function Footer() {
           {/* Column 1: LocalService Brand Info */}
           <div className="space-y-3">
             <div className="flex items-center gap-2.5 font-extrabold text-lg text-slate-900">
-              <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-xs">
+              <div className="w-8 h-8 rounded-xl bg-primary-600 text-white flex items-center justify-center shadow-xs">
                 <Wrench className="w-4 h-4" />
               </div>
-              <span>Local<span className="text-emerald-600">Service</span></span>
+              <span>Local<span className="text-primary-600">Service</span></span>
             </div>
 
             <p className="text-xs text-slate-500 leading-relaxed font-medium">
               Connecting homeowners with background-verified local service professionals, plumbers, electricians, and technicians across India.
             </p>
 
-            <div className="flex items-center gap-1.5 text-xs text-emerald-800 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200/60 font-semibold w-fit">
-              <Shield className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="flex items-center gap-1.5 text-xs text-primary-800 bg-primary-100 px-3 py-1 rounded-lg border border-primary-200 font-semibold w-fit">
+              <Shield className="w-4 h-4 text-primary-600 shrink-0" />
               <span>Verified Local Professionals</span>
             </div>
           </div>
@@ -34,27 +34,27 @@ export default function Footer() {
             <h4 className="font-extrabold text-slate-900 text-sm mb-3">Popular Services</h4>
             <ul className="space-y-2 font-medium">
               <li>
-                <Link to="/search?category=plumbing" className="hover:text-emerald-600 transition-colors">
+                <Link to="/search?category=plumbing" className="hover:text-primary-600 transition-colors">
                   Plumbing Repairs
                 </Link>
               </li>
               <li>
-                <Link to="/search?category=electrical-services" className="hover:text-emerald-600 transition-colors">
+                <Link to="/search?category=electrical-services" className="hover:text-primary-600 transition-colors">
                   Electrical & Wiring
                 </Link>
               </li>
               <li>
-                <Link to="/search?category=ac-repair" className="hover:text-emerald-600 transition-colors">
+                <Link to="/search?category=ac-repair" className="hover:text-primary-600 transition-colors">
                   AC Repair & Servicing
                 </Link>
               </li>
               <li>
-                <Link to="/search?category=home-cleaning" className="hover:text-emerald-600 transition-colors">
+                <Link to="/search?category=home-cleaning" className="hover:text-primary-600 transition-colors">
                   Home Deep Cleaning
                 </Link>
               </li>
               <li>
-                <Link to="/search?category=beauty-salon" className="hover:text-emerald-600 transition-colors">
+                <Link to="/search?category=beauty-salon" className="hover:text-primary-600 transition-colors">
                   Salon & Beauty at Home
                 </Link>
               </li>
@@ -66,27 +66,27 @@ export default function Footer() {
             <h4 className="font-extrabold text-slate-900 text-sm mb-3">Quick Links</h4>
             <ul className="space-y-2 font-medium">
               <li>
-                <Link to="/search" className="hover:text-emerald-600 transition-colors">
+                <Link to="/search" className="hover:text-primary-600 transition-colors">
                   Browse Providers
                 </Link>
               </li>
               <li>
-                <Link to="/register-provider" className="text-emerald-700 font-bold hover:underline">
+                <Link to="/register-provider" className="text-primary-700 font-bold hover:underline">
                   Join as a Provider
                 </Link>
               </li>
               <li>
-                <Link to="/bookings" className="hover:text-emerald-600 transition-colors">
+                <Link to="/bookings" className="hover:text-primary-600 transition-colors">
                   Track My Booking
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="hover:text-emerald-600 transition-colors">
+                <Link to="/login" className="hover:text-primary-600 transition-colors">
                   Account Login
                 </Link>
               </li>
               <li>
-                <Link to="/admin/dashboard" className="hover:text-emerald-600 transition-colors">
+                <Link to="/admin/dashboard" className="hover:text-primary-600 transition-colors">
                   Admin Dashboard
                 </Link>
               </li>
@@ -98,16 +98,16 @@ export default function Footer() {
             <h4 className="font-extrabold text-slate-900 text-sm mb-3">Customer Support</h4>
             <ul className="space-y-2.5 font-medium">
               <li className="flex items-center gap-2 text-slate-700">
-                <PhoneCall className="w-4 h-4 text-emerald-600 shrink-0" />
+                <PhoneCall className="w-4 h-4 text-primary-600 shrink-0" />
                 <span>+91 1800 123 4567 (Toll Free)</span>
               </li>
               <li className="flex items-center gap-2 text-slate-700">
-                <Mail className="w-4 h-4 text-emerald-600 shrink-0" />
+                <Mail className="w-4 h-4 text-primary-600 shrink-0" />
                 <span>support@localservicefinder.com</span>
               </li>
               <li className="flex items-center gap-2 text-slate-700">
-                <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Noida NCR • Delhi • Gurgaon • India</span>
+                <MapPin className="w-4 h-4 text-primary-600 shrink-0" />
+                <span>Lucknow • Noida NCR • Delhi • Gurgaon</span>
               </li>
             </ul>
           </div>

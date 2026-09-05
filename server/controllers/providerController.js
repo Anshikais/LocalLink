@@ -13,7 +13,7 @@ exports.getProviders = async (req, res) => {
       category,
       lat,
       lng,
-      radius = 10, // default 10 km
+      radius = 20, // default 20 km
       minRating = 0,
       maxPrice,
       availableOnly,

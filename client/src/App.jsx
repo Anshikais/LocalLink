@@ -37,7 +37,7 @@ import AdminSettings from './pages/admin/AdminSettings';
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-slate-50 text-slate-800 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen flex flex-col justify-between bg-slate-50 text-slate-800 selection:bg-primary-600 selection:text-white">
       <Navbar />
 
       <div className="flex-grow">

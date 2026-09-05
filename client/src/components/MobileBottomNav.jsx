@@ -20,7 +20,7 @@ export default function MobileBottomNav() {
         end
         className={({ isActive }) =>
           `flex flex-col items-center gap-1 text-[11px] font-medium transition-colors ${
-            isActive ? 'text-emerald-600 font-bold' : 'text-slate-500 hover:text-slate-900'
+            isActive ? 'text-primary-600 font-bold' : 'text-slate-500 hover:text-slate-900'
           }`
         }
       >
@@ -32,7 +32,7 @@ export default function MobileBottomNav() {
         to="/search"
         className={({ isActive }) =>
           `flex flex-col items-center gap-1 text-[11px] font-medium transition-colors ${
-            isActive ? 'text-emerald-600 font-bold' : 'text-slate-500 hover:text-slate-900'
+            isActive ? 'text-primary-600 font-bold' : 'text-slate-500 hover:text-slate-900'
           }`
         }
       >
@@ -44,7 +44,7 @@ export default function MobileBottomNav() {
         to="/bookings"
         className={({ isActive }) =>
           `flex flex-col items-center gap-1 text-[11px] font-medium transition-colors ${
-            isActive ? 'text-emerald-600 font-bold' : 'text-slate-500 hover:text-slate-900'
+            isActive ? 'text-primary-600 font-bold' : 'text-slate-500 hover:text-slate-900'
           }`
         }
       >
@@ -68,7 +68,7 @@ export default function MobileBottomNav() {
         to={getProfilePath()}
         className={({ isActive }) =>
           `flex flex-col items-center gap-1 text-[11px] font-medium transition-colors ${
-            isActive ? 'text-emerald-600 font-bold' : 'text-slate-500 hover:text-slate-900'
+            isActive ? 'text-primary-600 font-bold' : 'text-slate-500 hover:text-slate-900'
           }`
         }
       >

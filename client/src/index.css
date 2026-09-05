@@ -26,20 +26,20 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #10b981;
+  background: #2E6FA0;
 }
 
-/* Green Highlight Utilities */
+/* Primary Brand Color Utilities (#2E6FA0) */
 .text-accent {
-  color: #059669;
+  color: #2E6FA0;
 }
 
 .bg-accent {
-  background-color: #059669;
+  background-color: #2E6FA0;
 }
 
 .border-accent {
-  border-color: #059669;
+  border-color: #2E6FA0;
 }
 
 /* Leaflet map container fix */

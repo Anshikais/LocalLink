@@ -75,11 +75,11 @@ async function startServer() {
     console.log(`✅ Connected to MongoMemoryServer at ${memUri}`);
   }
 
-  // Auto seed database if empty
-  const Category = require('./models/Category');
-  const catCount = await Category.countDocuments();
-  if (catCount === 0) {
-    console.log('🌱 Database is empty. Running automatic seed data populator...');
+  // Auto seed database if empty or under-seeded
+  const Provider = require('./models/Provider');
+  const providerCount = await Provider.countDocuments();
+  if (providerCount < 50) {
+    console.log('🌱 Provider dataset low. Running automatic seed data populator...');
     const seedData = require('./utils/seed');
     await seedData();
   }

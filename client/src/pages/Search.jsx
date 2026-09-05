@@ -25,7 +25,7 @@ export default function Search() {
 
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
-  const [radius, setRadius] = useState(searchParams.get('radius') || location.radiusKm || 10);
+  const [radius, setRadius] = useState(searchParams.get('radius') || location.radiusKm || 20);
   const [minRating, setMinRating] = useState(searchParams.get('rating') || 0);
   const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
   const [verifiedOnly, setVerifiedOnly] = useState(searchParams.get('verified') === 'true');
@@ -75,7 +75,7 @@ export default function Search() {
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedCategory('');
-    setRadius(10);
+    setRadius(20);
     setMinRating(0);
     setMaxPrice('');
     setVerifiedOnly(false);
@@ -92,16 +92,16 @@ export default function Search() {
           <div>
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Search Services</h1>
             <p className="text-xs text-slate-500 mt-0.5 font-medium">
-              Showing local service providers near <span className="font-bold text-slate-800">{location.city || 'Noida NCR'}</span> within {radius} km.
+              Showing local service providers near <span className="font-bold text-slate-800">{location.city || 'Lucknow'}</span> within {radius} km.
             </p>
           </div>
 
           <button
             onClick={requestBrowserLocation}
             disabled={geoLoading}
-            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-xl border border-emerald-200/80 transition-colors shrink-0 self-start sm:self-auto"
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 bg-primary-100 text-primary-800 hover:bg-primary-200 rounded-xl border border-primary-200/80 transition-colors shrink-0 self-start sm:self-auto"
           >
-            <MapPin className="w-4 h-4 text-emerald-600" />
+            <MapPin className="w-4 h-4 text-primary-600" />
             {geoLoading ? 'Detecting...' : 'Use location'}
           </button>
         </div>
@@ -116,7 +116,7 @@ export default function Search() {
               placeholder="Search by service name, electrician, plumber, AC repair..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 pl-10 pr-4 py-2.5 rounded-xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+              className="w-full bg-slate-50 border border-slate-200 pl-10 pr-4 py-2.5 rounded-xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             />
             {searchQuery && (
               <button
@@ -155,7 +155,7 @@ export default function Search() {
               <button
                 onClick={() => setViewMode('map')}
                 className={`p-2 rounded-lg text-xs font-bold transition-all ${
-                  viewMode === 'map' ? 'bg-white text-emerald-600 shadow-xs' : 'text-slate-500 hover:text-slate-900'
+                  viewMode === 'map' ? 'bg-white text-primary-600 shadow-xs' : 'text-slate-500 hover:text-slate-900'
                 }`}
                 title="Map View"
               >
@@ -174,7 +174,7 @@ export default function Search() {
         <aside className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs space-y-6 sticky top-20">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <h3 className="font-extrabold text-sm text-slate-900 flex items-center gap-2">
-              <SlidersHorizontal className="w-4 h-4 text-emerald-600" /> Filters
+              <SlidersHorizontal className="w-4 h-4 text-primary-600" /> Filters
             </h3>
             <button
               onClick={clearFilters}
@@ -203,7 +203,7 @@ export default function Search() {
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-bold text-slate-800">
               <span className="uppercase tracking-wider">Search Radius</span>
-              <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">{radius} km</span>
+              <span className="text-primary-800 bg-primary-100 px-2 py-0.5 rounded border border-primary-200">{radius} km</span>
             </div>
             <input
               type="range"
@@ -214,7 +214,7 @@ export default function Search() {
                 setRadius(e.target.value);
                 updateRadius(e.target.value);
               }}
-              className="w-full accent-emerald-600 cursor-pointer"
+              className="w-full accent-primary-600 cursor-pointer"
             />
             <div className="flex justify-between text-[10px] text-slate-400 font-semibold">
               <span>1 km</span>
@@ -235,7 +235,7 @@ export default function Search() {
                   onClick={() => setMinRating(r)}
                   className={`flex-1 py-1.5 rounded-xl text-xs font-extrabold border transition-all flex items-center justify-center gap-0.5 ${
                     minRating == r 
-                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' 
+                      ? 'bg-primary-600 text-white border-primary-600 shadow-xs' 
                       : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                   }`}
                 >
@@ -267,10 +267,10 @@ export default function Search() {
                 type="checkbox"
                 checked={verifiedOnly}
                 onChange={(e) => setVerifiedOnly(e.target.checked)}
-                className="rounded text-emerald-600 focus:ring-emerald-500"
+                className="rounded text-primary-600 focus:ring-primary-500"
               />
               <span className="flex items-center gap-1">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> Verified Providers
+                <CheckCircle className="w-3.5 h-3.5 text-primary-600" /> Verified Providers
               </span>
             </label>
 
@@ -279,7 +279,7 @@ export default function Search() {
                 type="checkbox"
                 checked={availableOnly}
                 onChange={(e) => setAvailableOnly(e.target.checked)}
-                className="rounded text-emerald-600 focus:ring-emerald-500"
+                className="rounded text-primary-600 focus:ring-primary-500"
               />
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-amber-500" /> Available Today

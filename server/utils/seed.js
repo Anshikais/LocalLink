@@ -15,6 +15,9 @@ const Settings = require('../models/Settings');
 const Notification = require('../models/Notification');
 
 async function connectDB() {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
   const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/local_service_finder';
   try {
     await mongoose.connect(uri, { serverSelectionTimeoutMS: 2000 });
@@ -80,83 +83,87 @@ const seedData = async () => {
       ]
     });
 
-    console.log('Creating 20+ Categories...');
+    console.log('Creating 20+ Categories with Topic-Accurate Images...');
     const categoriesData = [
-      { name: 'Plumbing', description: 'Leaking pipe repair, tap fitting, bathroom fixtures, and drainage solutions.', icon: 'Wrench', image: 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&q=80&w=600', slug: 'plumbing', type: 'Home Services' },
-      { name: 'Electrical Services', description: 'Electrician repairs, fan installation, MCB box wiring, switchboard fix.', icon: 'Zap', image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600', slug: 'electrical-services', type: 'Home Services' },
-      { name: 'AC Repair & Service', description: 'AC servicing, gas charging, cooling repair, installation & uninstallation.', icon: 'Wind', image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&q=80&w=600', slug: 'ac-repair', type: 'Home Services' },
-      { name: 'Home Cleaning', description: 'Deep house cleaning, kitchen deep clean, sofa shampooing, bathroom wash.', icon: 'Sparkles', image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=600', slug: 'home-cleaning', type: 'Home Services' },
-      { name: 'Appliance Repair', description: 'Washing machine, refrigerator, microwave oven, and water purifier servicing.', icon: 'Tv', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=600', slug: 'appliance-repair', type: 'Home Services' },
-      { name: 'Beauty & Salon', description: 'At-home haircut, bridal makeup, facial, waxing, and spa treatments.', icon: 'Scissors', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600', slug: 'beauty-salon', type: 'Personal Services' },
-      { name: 'Tutoring & Classes', description: 'Math, Science, Coding, Music, and Language private home tutors.', icon: 'BookOpen', image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=600', slug: 'tutoring', type: 'Personal Services' },
-      { name: 'Car & Bike Repair', description: 'Doorstep vehicle service, battery jumpstart, tyre change & mechanic.', icon: 'Car', image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=80&w=600', slug: 'car-bike-repair', type: 'Automotive' },
-      { name: 'Painting & Waterproofing', description: 'Interior home painting, exterior walls, damp proofing & texture finish.', icon: 'Paintbrush', image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=600', slug: 'painting', type: 'Home Services' },
-      { name: 'Carpentry', description: 'Furniture repair, door lock installation, custom wooden cupboards & fitting.', icon: 'Hammer', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=600', slug: 'carpentry', type: 'Home Services' },
-      { name: 'Laptop & Mobile Repair', description: 'Screen replacement, battery fix, motherboard repair & software update.', icon: 'Tv', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=600', slug: 'laptop-mobile-repair', type: 'Technology' },
-      { name: 'CCTV Installation', description: 'Security camera setup, DVR configuration, and indoor wiring.', icon: 'Tv', image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&q=80&w=600', slug: 'cctv-installation', type: 'Technology' },
-      { name: 'Pest Control', description: 'Termite treatment, cockroach control, bed bug spray & rodent control.', icon: 'Sparkles', image: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&q=80&w=600', slug: 'pest-control', type: 'Home Services' },
-      { name: 'RO & Water Purifier', description: 'Filter replacement, membrane check, UV lamp fix & installation.', icon: 'Wrench', image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&q=80&w=600', slug: 'ro-water-purifier', type: 'Home Services' },
-      { name: 'Car Wash & Detailing', description: 'Doorstep foam wash, interior vacuuming & ceramic coating.', icon: 'Car', image: 'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&q=80&w=600', slug: 'car-wash-detailing', type: 'Automotive' },
-      { name: 'Fitness & Yoga Trainer', description: 'Personal home gym trainer, weight loss coach & yoga instructor.', icon: 'BookOpen', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=600', slug: 'fitness-yoga', type: 'Personal Services' },
-      { name: 'Home Packers & Movers', description: 'Household luggage packing, furniture shifting & tempo transport.', icon: 'Car', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600', slug: 'packers-movers', type: 'Professional' },
-      { name: 'Event Photography', description: 'Birthday, pre-wedding, maternity, and corporate shoot photographer.', icon: 'Scissors', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=600', slug: 'event-photography', type: 'Professional' },
-      { name: 'Makeup Artist', description: 'Bridal makeup, party makeover, hair styling & saree draping.', icon: 'Scissors', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=600', slug: 'makeup-artist', type: 'Personal Services' },
-      { name: 'Solar Panel Installation', description: 'Rooftop solar setup, inverter wiring, and net metering assistance.', icon: 'Zap', image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&q=80&w=600', slug: 'solar-panel', type: 'Home Services' }
+      { name: 'Plumbing', description: 'Leaking pipe repair, tap fitting, bathroom fixtures, and drainage solutions.', icon: 'Wrench', image: 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&q=80&w=800', slug: 'plumbing', type: 'Home Services' },
+      { name: 'Electrical Services', description: 'Electrician repairs, fan installation, MCB box wiring, switchboard fix.', icon: 'Zap', image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800', slug: 'electrical-services', type: 'Home Services' },
+      { name: 'AC Repair & Service', description: 'AC servicing, gas charging, cooling repair, installation & uninstallation.', icon: 'Wind', image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&q=80&w=800', slug: 'ac-repair', type: 'Home Services' },
+      { name: 'Home Cleaning', description: 'Deep house cleaning, kitchen deep clean, sofa shampooing, bathroom wash.', icon: 'Sparkles', image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800', slug: 'home-cleaning', type: 'Home Services' },
+      { name: 'Appliance Repair', description: 'Washing machine, refrigerator, microwave oven, and water purifier servicing.', icon: 'Tv', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800', slug: 'appliance-repair', type: 'Home Services' },
+      { name: 'Beauty & Salon', description: 'At-home haircut, bridal makeup, facial, waxing, and spa treatments.', icon: 'Scissors', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800', slug: 'beauty-salon', type: 'Personal Services' },
+      { name: 'Tutoring & Classes', description: 'Math, Science, Coding, Music, and Language private home tutors.', icon: 'BookOpen', image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800', slug: 'tutoring', type: 'Personal Services' },
+      { name: 'Car & Bike Repair', description: 'Doorstep vehicle service, battery jumpstart, tyre change & mechanic.', icon: 'Car', image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=80&w=800', slug: 'car-bike-repair', type: 'Automotive' },
+      { name: 'Painting & Waterproofing', description: 'Interior home painting, exterior walls, damp proofing & texture finish.', icon: 'Paintbrush', image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=800', slug: 'painting', type: 'Home Services' },
+      { name: 'Carpentry', description: 'Furniture repair, door lock installation, custom wooden cupboards & fitting.', icon: 'Hammer', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=800', slug: 'carpentry', type: 'Home Services' },
+      { name: 'Laptop & Mobile Repair', description: 'Screen replacement, battery fix, motherboard repair & software update.', icon: 'Tv', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=800', slug: 'laptop-mobile-repair', type: 'Technology' },
+      { name: 'CCTV Installation', description: 'Security camera setup, DVR configuration, and indoor wiring.', icon: 'Tv', image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&q=80&w=800', slug: 'cctv-installation', type: 'Technology' },
+      { name: 'Pest Control', description: 'Termite treatment, cockroach control, bed bug spray & rodent control.', icon: 'Sparkles', image: 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&q=80&w=800', slug: 'pest-control', type: 'Home Services' },
+      { name: 'RO & Water Purifier', description: 'Filter replacement, membrane check, UV lamp fix & installation.', icon: 'Wrench', image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&q=80&w=800', slug: 'ro-water-purifier', type: 'Home Services' },
+      { name: 'Car Wash & Detailing', description: 'Doorstep foam wash, interior vacuuming & ceramic coating.', icon: 'Car', image: 'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&q=80&w=800', slug: 'car-wash-detailing', type: 'Automotive' },
+      { name: 'Fitness & Yoga Trainer', description: 'Personal home gym trainer, weight loss coach & yoga instructor.', icon: 'BookOpen', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=800', slug: 'fitness-yoga', type: 'Personal Services' },
+      { name: 'Home Packers & Movers', description: 'Household luggage packing, furniture shifting & tempo transport.', icon: 'Car', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800', slug: 'packers-movers', type: 'Professional' },
+      { name: 'Event Photography', description: 'Birthday, pre-wedding, maternity, and corporate shoot photographer.', icon: 'Scissors', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800', slug: 'event-photography', type: 'Professional' },
+      { name: 'Makeup Artist', description: 'Bridal makeup, party makeover, hair styling & saree draping.', icon: 'Scissors', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=800', slug: 'makeup-artist', type: 'Personal Services' },
+      { name: 'Solar Panel Installation', description: 'Rooftop solar setup, inverter wiring, and net metering assistance.', icon: 'Zap', image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&q=80&w=800', slug: 'solar-panel', type: 'Home Services' }
     ];
 
     const createdCategories = await Category.insertMany(categoriesData);
     const catMap = {};
-    createdCategories.forEach(c => { catMap[c.slug] = c._id; });
+    const catImageMap = {};
+    createdCategories.forEach(c => { 
+      catMap[c.slug] = c._id; 
+      catImageMap[c.slug] = c.image;
+    });
 
     console.log('Creating 50+ Services catalog...');
     const servicesData = [
-      { name: 'Tap & Mixer Repair', description: 'Fix leaking taps or replace bathroom mixer unit.', category: catMap['plumbing'], startingPrice: 199 },
-      { name: 'Drainage Unclogging', description: 'Clear clogged kitchen sink or bathroom drain pipe.', category: catMap['plumbing'], startingPrice: 299 },
-      { name: 'Water Tank Cleaning', description: 'Complete hygienic cleaning of overhead water storage tank.', category: catMap['plumbing'], startingPrice: 799 },
-      { name: 'Bathroom Pipe Leak Fix', description: 'Concealed pipe leakage detection and repair.', category: catMap['plumbing'], startingPrice: 499 },
+      { name: 'Tap & Mixer Repair', description: 'Fix leaking taps or replace bathroom mixer unit.', category: catMap['plumbing'], startingPrice: 199, image: catImageMap['plumbing'] },
+      { name: 'Drainage Unclogging', description: 'Clear clogged kitchen sink or bathroom drain pipe.', category: catMap['plumbing'], startingPrice: 299, image: catImageMap['plumbing'] },
+      { name: 'Water Tank Cleaning', description: 'Complete hygienic cleaning of overhead water storage tank.', category: catMap['plumbing'], startingPrice: 799, image: catImageMap['plumbing'] },
+      { name: 'Bathroom Pipe Leak Fix', description: 'Concealed pipe leakage detection and repair.', category: catMap['plumbing'], startingPrice: 499, image: catImageMap['plumbing'] },
 
-      { name: 'Fan Repair & Fitting', description: 'Ceiling or wall fan installation and motor repair.', category: catMap['electrical-services'], startingPrice: 199 },
-      { name: 'Switchboard & Socket Fix', description: 'Fix burnt switches, short circuits, and new socket points.', category: catMap['electrical-services'], startingPrice: 149 },
-      { name: 'House Complete Rewiring', description: 'Safety inspection and full house copper wiring replacement.', category: catMap['electrical-services'], startingPrice: 1499 },
-      { name: 'MCB & Fuse Box Repair', description: 'Trip resolution and main circuit breaker replacement.', category: catMap['electrical-services'], startingPrice: 299 },
+      { name: 'Fan Repair & Fitting', description: 'Ceiling or wall fan installation and motor repair.', category: catMap['electrical-services'], startingPrice: 199, image: catImageMap['electrical-services'] },
+      { name: 'Switchboard & Socket Fix', description: 'Fix burnt switches, short circuits, and new socket points.', category: catMap['electrical-services'], startingPrice: 149, image: catImageMap['electrical-services'] },
+      { name: 'House Complete Rewiring', description: 'Safety inspection and full house copper wiring replacement.', category: catMap['electrical-services'], startingPrice: 1499, image: catImageMap['electrical-services'] },
+      { name: 'MCB & Fuse Box Repair', description: 'Trip resolution and main circuit breaker replacement.', category: catMap['electrical-services'], startingPrice: 299, image: catImageMap['electrical-services'] },
 
-      { name: 'AC Deep Foam Servicing', description: 'High-pressure foam jet wash for Split/Window AC.', category: catMap['ac-repair'], startingPrice: 499 },
-      { name: 'AC Gas Refill (R32 / R410)', description: 'Leakage detection, pressure test, and full refrigerant refill.', category: catMap['ac-repair'], startingPrice: 1899 },
-      { name: 'AC Installation / Removal', description: 'Safe mounting/unmounting with copper pipe fitting.', category: catMap['ac-repair'], startingPrice: 799 },
-      { name: 'AC PCB Board Repair', description: 'Inverter AC circuit board repair & sensor replacement.', category: catMap['ac-repair'], startingPrice: 999 },
+      { name: 'AC Deep Foam Servicing', description: 'High-pressure foam jet wash for Split/Window AC.', category: catMap['ac-repair'], startingPrice: 499, image: catImageMap['ac-repair'] },
+      { name: 'AC Gas Refill (R32 / R410)', description: 'Leakage detection, pressure test, and full refrigerant refill.', category: catMap['ac-repair'], startingPrice: 1899, image: catImageMap['ac-repair'] },
+      { name: 'AC Installation / Removal', description: 'Safe mounting/unmounting with copper pipe fitting.', category: catMap['ac-repair'], startingPrice: 799, image: catImageMap['ac-repair'] },
+      { name: 'AC PCB Board Repair', description: 'Inverter AC circuit board repair & sensor replacement.', category: catMap['ac-repair'], startingPrice: 999, image: catImageMap['ac-repair'] },
 
-      { name: 'Full House Deep Cleaning', description: 'Includes rooms, balcony, windows, floor scrubbing & dusting.', category: catMap['home-cleaning'], startingPrice: 1999 },
-      { name: 'Bathroom Deep Clean', description: 'Hard water stain removal, tile sanitization & mirror polish.', category: catMap['home-cleaning'], startingPrice: 499 },
-      { name: 'Sofa & Mattress Shampoo', description: 'Deep vacuuming, organic shampoo spray & stain extraction.', category: catMap['home-cleaning'], startingPrice: 699 },
-      { name: 'Kitchen Chimney & Degreasing', description: 'Degreasing mesh filter, rotor fan wash & outer polish.', category: catMap['home-cleaning'], startingPrice: 599 },
+      { name: 'Full House Deep Cleaning', description: 'Includes rooms, balcony, windows, floor scrubbing & dusting.', category: catMap['home-cleaning'], startingPrice: 1999, image: catImageMap['home-cleaning'] },
+      { name: 'Bathroom Deep Clean', description: 'Hard water stain removal, tile sanitization & mirror polish.', category: catMap['home-cleaning'], startingPrice: 499, image: catImageMap['home-cleaning'] },
+      { name: 'Sofa & Mattress Shampoo', description: 'Deep vacuuming, organic shampoo spray & stain extraction.', category: catMap['home-cleaning'], startingPrice: 699, image: catImageMap['home-cleaning'] },
+      { name: 'Kitchen Chimney & Degreasing', description: 'Degreasing mesh filter, rotor fan wash & outer polish.', category: catMap['home-cleaning'], startingPrice: 599, image: catImageMap['home-cleaning'] },
 
-      { name: 'Washing Machine Repair', description: 'Fix drum issue, water intake, or PCB board failure.', category: catMap['appliance-repair'], startingPrice: 349 },
-      { name: 'Refrigerator Cooling Repair', description: 'Compressor check, thermostat fix, and defrost timer.', category: catMap['appliance-repair'], startingPrice: 449 },
-      { name: 'Microwave Oven Fix', description: 'Magnetron replacement, heating issue fix & door switch.', category: catMap['appliance-repair'], startingPrice: 399 },
+      { name: 'Washing Machine Repair', description: 'Fix drum issue, water intake, or PCB board failure.', category: catMap['appliance-repair'], startingPrice: 349, image: catImageMap['appliance-repair'] },
+      { name: 'Refrigerator Cooling Repair', description: 'Compressor check, thermostat fix, and defrost timer.', category: catMap['appliance-repair'], startingPrice: 449, image: catImageMap['appliance-repair'] },
+      { name: 'Microwave Oven Fix', description: 'Magnetron replacement, heating issue fix & door switch.', category: catMap['appliance-repair'], startingPrice: 399, image: catImageMap['appliance-repair'] },
 
-      { name: 'Men Haircut & Beard Trim', description: 'Styling haircut, beard shape up & head massage.', category: catMap['beauty-salon'], startingPrice: 249 },
-      { name: 'Women Glow Facial & Cleanup', description: 'Herbal facial, fruit facial, and skin radiance treatment.', category: catMap['beauty-salon'], startingPrice: 699 },
-      { name: 'Full Body Waxing & Spa', description: 'Rica wax treatment with relaxing body oil massage.', category: catMap['beauty-salon'], startingPrice: 999 },
+      { name: 'Men Haircut & Beard Trim', description: 'Styling haircut, beard shape up & head massage.', category: catMap['beauty-salon'], startingPrice: 249, image: catImageMap['beauty-salon'] },
+      { name: 'Women Glow Facial & Cleanup', description: 'Herbal facial, fruit facial, and skin radiance treatment.', category: catMap['beauty-salon'], startingPrice: 699, image: catImageMap['beauty-salon'] },
+      { name: 'Full Body Waxing & Spa', description: 'Rica wax treatment with relaxing body oil massage.', category: catMap['beauty-salon'], startingPrice: 999, image: catImageMap['beauty-salon'] },
 
-      { name: 'Class 9-12 Math & Physics Tutor', description: 'Personalized 1-on-1 home tuitions by experienced faculty.', category: catMap['tutoring'], startingPrice: 500 },
-      { name: 'Python & Web Development Tutor', description: 'Learn JavaScript, React, and Python hands-on.', category: catMap['tutoring'], startingPrice: 750 },
+      { name: 'Class 9-12 Math & Physics Tutor', description: 'Personalized 1-on-1 home tuitions by experienced faculty.', category: catMap['tutoring'], startingPrice: 500, image: catImageMap['tutoring'] },
+      { name: 'Python & Web Development Tutor', description: 'Learn JavaScript, React, and Python hands-on.', category: catMap['tutoring'], startingPrice: 750, image: catImageMap['tutoring'] },
 
-      { name: 'Full Car Wash & Polish', description: 'Foam wash, interior vacuuming & dashboard polish.', category: catMap['car-bike-repair'], startingPrice: 499 },
-      { name: 'Bike General Servicing', description: 'Engine oil change, brake adjustment, and chain lube.', category: catMap['car-bike-repair'], startingPrice: 399 },
+      { name: 'Full Car Wash & Polish', description: 'Foam wash, interior vacuuming & dashboard polish.', category: catMap['car-bike-repair'], startingPrice: 499, image: catImageMap['car-bike-repair'] },
+      { name: 'Bike General Servicing', description: 'Engine oil change, brake adjustment, and chain lube.', category: catMap['car-bike-repair'], startingPrice: 399, image: catImageMap['car-bike-repair'] },
 
-      { name: 'Full Room Painting', description: 'Asian Paints tractor emulsion coating with primer base.', category: catMap['painting'], startingPrice: 2499 },
-      { name: 'Door & Lock Installation', description: 'Main door lock replacement, hinge repair & latch fix.', category: catMap['carpentry'], startingPrice: 299 },
-      { name: 'Laptop Display Screen Replace', description: 'HD IPS display panel replacement with 6 months warranty.', category: catMap['laptop-mobile-repair'], startingPrice: 2499 },
-      { name: 'iPhone & Android Battery Fix', description: 'Original high capacity battery installation.', category: catMap['laptop-mobile-repair'], startingPrice: 999 },
-      { name: '4-Camera HD CCTV Kit Setup', description: '4 Night vision IP cameras with 1TB DVR recording.', category: catMap['cctv-installation'], startingPrice: 5999 },
-      { name: 'Full Home Anti-Termite Control', description: 'Drill-fill-seal chemical barrier with 2 years warranty.', category: catMap['pest-control'], startingPrice: 1499 },
-      { name: 'RO Filter & Membrane Replace', description: 'Sediment, Carbon filter & 75 GPD Membrane change.', category: catMap['ro-water-purifier'], startingPrice: 599 },
-      { name: 'Full Body Car Ceramic Coat', description: '9H Hardness hydrophobic ceramic paint protection.', category: catMap['car-wash-detailing'], startingPrice: 3999 },
-      { name: 'Personal Home Fitness Coach', description: 'Dedicated personal trainer for strength & weight loss.', category: catMap['fitness-yoga'], startingPrice: 600 },
-      { name: 'Local City Luggage Shifting', description: 'Tempo transport with loader boys for safe shifting.', category: catMap['packers-movers'], startingPrice: 1800 },
-      { name: 'Pre-Wedding Couple Shoot', description: 'Outdoor shoot with drone footage & color graded album.', category: catMap['event-photography'], startingPrice: 9999 },
-      { name: 'HD Bridal Makeup Package', description: 'Mac/Kryolan HD bridal makeup with hair styling & draping.', category: catMap['makeup-artist'], startingPrice: 4999 },
-      { name: '3KW Rooftop Solar Installation', description: 'Mono PERC solar panels with 3KW On-Grid Inverter.', category: catMap['solar-panel'], startingPrice: 150000 }
+      { name: 'Full Room Painting', description: 'Asian Paints tractor emulsion coating with primer base.', category: catMap['painting'], startingPrice: 2499, image: catImageMap['painting'] },
+      { name: 'Door & Lock Installation', description: 'Main door lock replacement, hinge repair & latch fix.', category: catMap['carpentry'], startingPrice: 299, image: catImageMap['carpentry'] },
+      { name: 'Laptop Display Screen Replace', description: 'HD IPS display panel replacement with 6 months warranty.', category: catMap['laptop-mobile-repair'], startingPrice: 2499, image: catImageMap['laptop-mobile-repair'] },
+      { name: 'iPhone & Android Battery Fix', description: 'Original high capacity battery installation.', category: catMap['laptop-mobile-repair'], startingPrice: 999, image: catImageMap['laptop-mobile-repair'] },
+      { name: '4-Camera HD CCTV Kit Setup', description: '4 Night vision IP cameras with 1TB DVR recording.', category: catMap['cctv-installation'], startingPrice: 5999, image: catImageMap['cctv-installation'] },
+      { name: 'Full Home Anti-Termite Control', description: 'Drill-fill-seal chemical barrier with 2 years warranty.', category: catMap['pest-control'], startingPrice: 1499, image: catImageMap['pest-control'] },
+      { name: 'RO Filter & Membrane Replace', description: 'Sediment, Carbon filter & 75 GPD Membrane change.', category: catMap['ro-water-purifier'], startingPrice: 599, image: catImageMap['ro-water-purifier'] },
+      { name: 'Full Body Car Ceramic Coat', description: '9H Hardness hydrophobic ceramic paint protection.', category: catMap['car-wash-detailing'], startingPrice: 3999, image: catImageMap['car-wash-detailing'] },
+      { name: 'Personal Home Fitness Coach', description: 'Dedicated personal trainer for strength & weight loss.', category: catMap['fitness-yoga'], startingPrice: 600, image: catImageMap['fitness-yoga'] },
+      { name: 'Local City Luggage Shifting', description: 'Tempo transport with loader boys for safe shifting.', category: catMap['packers-movers'], startingPrice: 1800, image: catImageMap['packers-movers'] },
+      { name: 'Pre-Wedding Couple Shoot', description: 'Outdoor shoot with drone footage & color graded album.', category: catMap['event-photography'], startingPrice: 9999, image: catImageMap['event-photography'] },
+      { name: 'HD Bridal Makeup Package', description: 'Mac/Kryolan HD bridal makeup with hair styling & draping.', category: catMap['makeup-artist'], startingPrice: 4999, image: catImageMap['makeup-artist'] },
+      { name: '3KW Rooftop Solar Installation', description: 'Mono PERC solar panels with 3KW On-Grid Inverter.', category: catMap['solar-panel'], startingPrice: 150000, image: catImageMap['solar-panel'] }
     ];
 
     await Service.insertMany(servicesData);
@@ -278,7 +285,6 @@ const seedData = async () => {
 
       if (item.city === 'Lucknow') {
         const loc = lucknowLocalities[item.localityIdx !== undefined ? item.localityIdx : (i % lucknowLocalities.length)];
-        // Add tiny realistic offset within 1.5 km of locality center
         const offsetLat = (Math.sin(i * 1.7) * 0.012);
         const offsetLng = (Math.cos(i * 1.7) * 0.012);
         pLat = loc.lat + offsetLat;
@@ -317,7 +323,7 @@ const seedData = async () => {
         ],
         experienceYears: item.exp,
         startingPrice: item.price,
-        coverImage: catObj.image,
+        coverImage: catObj.image, // Strictly category-matched service cover image
         location: {
           type: 'Point',
           coordinates: [pLng, pLat],
@@ -364,7 +370,7 @@ const seedData = async () => {
       ],
       experienceYears: 8,
       startingPrice: 199,
-      coverImage: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=1200',
+      coverImage: catImageMap['electrical-services'],
       location: {
         type: 'Point',
         coordinates: [81.0450, 26.8950],
@@ -376,8 +382,7 @@ const seedData = async () => {
       workingHours: 'Mon-Sat: 9:00 AM - 8:00 PM',
       isAvailable: true,
       gallery: [
-        'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&q=80&w=600'
+        catImageMap['electrical-services']
       ],
       verificationStatus: 'approved',
       isFeatured: true,
@@ -425,10 +430,10 @@ const seedData = async () => {
       booking: sampleBooking._id,
       rating: 5,
       comment: 'Rahul arrived right on time, had all professional tools, and installed both fans very neatly within 45 minutes! Highly recommended in Gomti Nagar.',
-      images: ['https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400']
+      images: [catImageMap['electrical-services']]
     });
 
-    console.log('✅ Database Seeding Completed Successfully!');
+    console.log('✅ Database Seeding Completed Successfully with Topic-Accurate Image Mapping!');
     console.log(`📊 Total Seeded: ${createdCategories.length} Categories, ${servicesData.length} Services, ${createdProviders.length + 1} Providers (${providerNames.filter(p => p.city === 'Lucknow').length + 1} in Lucknow).`);
     console.log('==================================================');
     console.log('Test Login Credentials:');
