@@ -79,12 +79,13 @@ npm run dev
 🗄️ Database
 
 LocalLink uses MongoDB 
-
+```text
 MongoDB
    ↓
 Express API
    ↓
 React
+```
 🧩 Dynamic Services
 
 One of the main goals of LocalLink is to make services dynamically manageable.
@@ -102,6 +103,7 @@ The data is saved in MongoDB and can then be retrieved by the user application.
 This means developers do not need to modify React code every time a new service is added.
 
 Example
+```text
 Admin Dashboard
       ↓
 Add Service
@@ -113,6 +115,7 @@ Service API
 User Application
       ↓
 New Service Appears
+```
 👨‍💼 Admin Dashboard
 
 The Admin Dashboard provides centralized management for the marketplace.
@@ -226,7 +229,7 @@ Frontend route protection alone should not be considered sufficient security.
 The backend contains a development end-to-end testing utility:
 
 server/utils/test_e2e.js
-
+```text
 The application should be tested across:
 
 Customer Flow
@@ -265,6 +268,7 @@ Add Service
 Add Provider
    ↓
 Manage Marketplace
+```
 🛣️ Future Improvements
 
 Potential future improvements include:
