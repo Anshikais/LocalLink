@@ -4,23 +4,43 @@ const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv');
 const fileUpload = require('express-fileupload');
-const { MongoMemoryServer } = require('mongodb-memory-server');
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// ================================
 // Middleware
+// ================================
+
 app.use(cors());
+
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(fileUpload({ createParentPath: true }));
+
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: '10mb',
+  })
+);
+
+app.use(
+  fileUpload({
+    createParentPath: true,
+  })
+);
 
 // Serve static uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(
+  '/uploads',
+  express.static(path.join(__dirname, 'uploads'))
+);
 
-// Routes imports
+// ================================
+// Routes
+// ================================
+
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
@@ -44,50 +64,140 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/upload', uploadRoutes);
 
-// Health Check API
+// ================================
+// Health Check
+// ================================
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
     app: 'Local Service Finder API',
-    time: new Date().toISOString()
+    time: new Date().toISOString(),
+    database:
+      mongoose.connection.readyState === 1
+        ? 'connected'
+        : 'disconnected',
   });
 });
 
+// ================================
 // Global Error Handler
+// ================================
+
 app.use((err, req, res, next) => {
-  console.error('API Error:', err.stack);
+  console.error('API Error:', err.stack || err);
+
   res.status(err.status || 500).json({
-    message: err.message || 'Internal Server Error'
+    message: err.message || 'Internal Server Error',
   });
 });
 
-// Database Connection & Auto Seed Fallback
-async function startServer() {
-  const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/local_service_finder';
+// ================================
+// Database Connection
+// ================================
+
+async function connectDatabase() {
+  const uri = process.env.MONGO_URI;
+
+  if (!uri) {
+    throw new Error(
+      'MONGO_URI environment variable is not configured.'
+    );
+  }
+
   try {
-    await mongoose.connect(uri, { serverSelectionTimeoutMS: 2500 });
-    console.log(`✅ Connected to local MongoDB at ${uri}`);
-  } catch (err) {
-    console.log('⚠️ Local MongoDB service not running. Initializing in-memory MongoDB database...');
-    const mongoServer = await MongoMemoryServer.create();
-    const memUri = mongoServer.getUri();
-    await mongoose.connect(memUri);
-    console.log(`✅ Connected to MongoMemoryServer at ${memUri}`);
-  }
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 10000,
+    });
 
-  // Auto seed database if empty or under-seeded
-  const Provider = require('./models/Provider');
-  const providerCount = await Provider.countDocuments();
-  if (providerCount < 50) {
-    console.log('🌱 Provider dataset low. Running automatic seed data populator...');
-    const seedData = require('./utils/seed');
-    await seedData();
-  }
+    console.log('✅ Connected to MongoDB Atlas');
+  } catch (error) {
+    console.error('❌ MongoDB connection failed');
+    console.error(error.message);
 
-  app.listen(PORT, () => {
-    console.log(`🚀 Local Service Finder API Server running on port ${PORT}`);
-    console.log(`🔗 API Base URL: http://localhost:${PORT}/api`);
-  });
+    throw error;
+  }
+}
+
+// ================================
+// Seed Database
+// ================================
+
+async function seedDatabase() {
+  try {
+    const Provider = require('./models/Provider');
+
+    const providerCount = await Provider.countDocuments();
+
+    console.log(`📊 Current providers: ${providerCount}`);
+
+    if (providerCount < 50) {
+      console.log(
+        '🌱 Provider dataset low. Running seed data...'
+      );
+
+      const seedData = require('./utils/seed');
+
+      await seedData();
+
+      console.log('✅ Seed data completed');
+    } else {
+      console.log('✅ Database already contains provider data');
+    }
+  } catch (error) {
+    console.error('⚠️ Database seeding failed:', error.message);
+
+    // Do not crash the entire server because of seed failure
+  }
+}
+
+// ================================
+// Start Server
+// ================================
+
+async function startServer() {
+  try {
+    await connectDatabase();
+
+    await seedDatabase();
+
+    app.listen(PORT, () => {
+      console.log(
+        `🚀 Local Service Finder API running on port ${PORT}`
+      );
+
+      console.log(
+        `🔗 API Base URL: http://localhost:${PORT}/api`
+      );
+    });
+  } catch (error) {
+    console.error(
+      '❌ Server startup failed:',
+      error.message
+    );
+
+    process.exit(1);
+  }
 }
 
 startServer();
+
+// ================================
+// Graceful Shutdown
+// ================================
+
+process.on('SIGINT', async () => {
+  console.log('🛑 Shutting down server...');
+
+  await mongoose.connection.close();
+
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log('🛑 Shutting down server...');
+
+  await mongoose.connection.close();
+
+  process.exit(0);
+});
