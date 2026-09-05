@@ -49,7 +49,7 @@ const seedData = async () => {
       contactEmail: 'support@localservicefinder.com'
     });
 
-    console.log('Creating Admin & Test users...');
+    console.log('Creating Admin & Customer users...');
     const adminUser = await User.create({
       name: 'Platform Admin',
       email: 'admin@localservicefinder.com',
@@ -69,12 +69,12 @@ const seedData = async () => {
       addresses: [
         {
           title: 'Home',
-          street: 'Sector 62, Near Electronic City',
-          city: 'Noida',
+          street: 'Gomti Nagar, Near Riverside Mall',
+          city: 'Lucknow',
           state: 'Uttar Pradesh',
-          pincode: '201301',
-          latitude: 28.6270,
-          longitude: 77.3726,
+          pincode: '226010',
+          latitude: 26.8990,
+          longitude: 81.0500,
           isDefault: true
         }
       ]
@@ -92,8 +92,6 @@ const seedData = async () => {
       { name: 'Car & Bike Repair', description: 'Doorstep vehicle service, battery jumpstart, tyre change & mechanic.', icon: 'Car', image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=80&w=600', slug: 'car-bike-repair', type: 'Automotive' },
       { name: 'Painting & Waterproofing', description: 'Interior home painting, exterior walls, damp proofing & texture finish.', icon: 'Paintbrush', image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=600', slug: 'painting', type: 'Home Services' },
       { name: 'Carpentry', description: 'Furniture repair, door lock installation, custom wooden cupboards & fitting.', icon: 'Hammer', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=600', slug: 'carpentry', type: 'Home Services' },
-      
-      // Additional 10 categories
       { name: 'Laptop & Mobile Repair', description: 'Screen replacement, battery fix, motherboard repair & software update.', icon: 'Tv', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=600', slug: 'laptop-mobile-repair', type: 'Technology' },
       { name: 'CCTV Installation', description: 'Security camera setup, DVR configuration, and indoor wiring.', icon: 'Tv', image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&q=80&w=600', slug: 'cctv-installation', type: 'Technology' },
       { name: 'Pest Control', description: 'Termite treatment, cockroach control, bed bug spray & rodent control.', icon: 'Sparkles', image: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&q=80&w=600', slug: 'pest-control', type: 'Home Services' },
@@ -148,8 +146,6 @@ const seedData = async () => {
 
       { name: 'Full Room Painting', description: 'Asian Paints tractor emulsion coating with primer base.', category: catMap['painting'], startingPrice: 2499 },
       { name: 'Door & Lock Installation', description: 'Main door lock replacement, hinge repair & latch fix.', category: catMap['carpentry'], startingPrice: 299 },
-
-      // Additional Services
       { name: 'Laptop Display Screen Replace', description: 'HD IPS display panel replacement with 6 months warranty.', category: catMap['laptop-mobile-repair'], startingPrice: 2499 },
       { name: 'iPhone & Android Battery Fix', description: 'Original high capacity battery installation.', category: catMap['laptop-mobile-repair'], startingPrice: 999 },
       { name: '4-Camera HD CCTV Kit Setup', description: '4 Night vision IP cameras with 1TB DVR recording.', category: catMap['cctv-installation'], startingPrice: 5999 },
@@ -165,10 +161,25 @@ const seedData = async () => {
 
     await Service.insertMany(servicesData);
 
-    console.log('Creating 100+ Realistic Service Providers across Indian Cities...');
+    console.log('Creating 120+ Realistic Service Providers across Lucknow & NCR...');
 
-    const targetCities = [
-      { city: 'Lucknow', state: 'Uttar Pradesh', lat: 26.8467, lng: 80.9462 },
+    // Dedicated Lucknow localities with realistic lat/lng surrounding user location (~26.899, ~81.050) & Hazratganj (~26.846)
+    const lucknowLocalities = [
+      { locality: 'Gomti Nagar', lat: 26.8530, lng: 81.0010 },
+      { locality: 'Gomti Nagar Extension', lat: 26.8850, lng: 81.0350 },
+      { locality: 'Indira Nagar', lat: 26.8870, lng: 80.9950 },
+      { locality: 'Hazratganj', lat: 26.8467, lng: 80.9462 },
+      { locality: 'Aliganj', lat: 26.8920, lng: 80.9410 },
+      { locality: 'Mahanagar', lat: 26.8720, lng: 80.9520 },
+      { locality: 'Chinhat', lat: 26.8990, lng: 81.0500 },
+      { locality: 'Vikas Nagar', lat: 26.8980, lng: 80.9630 },
+      { locality: 'Ashiyana', lat: 26.7900, lng: 80.9120 },
+      { locality: 'Alambagh', lat: 26.8150, lng: 80.9000 },
+      { locality: 'Jankipuram', lat: 26.9200, lng: 80.9480 },
+      { locality: 'Rajajipuram', lat: 26.8350, lng: 80.8850 }
+    ];
+
+    const ncrCities = [
       { city: 'Noida', state: 'Uttar Pradesh', lat: 28.5355, lng: 77.3910 },
       { city: 'Greater Noida', state: 'Uttar Pradesh', lat: 28.4744, lng: 77.5040 },
       { city: 'Delhi', state: 'Delhi NCR', lat: 28.6139, lng: 77.2090 },
@@ -176,51 +187,118 @@ const seedData = async () => {
       { city: 'Gurgaon', state: 'Haryana', lat: 28.4595, lng: 77.0266 }
     ];
 
-    const categorySlugsList = [
-      'plumbing', 'electrical-services', 'ac-repair', 'home-cleaning', 'appliance-repair',
-      'beauty-salon', 'tutoring', 'car-bike-repair', 'painting', 'carpentry',
-      'laptop-mobile-repair', 'cctv-installation', 'pest-control', 'ro-water-purifier',
-      'car-wash-detailing', 'fitness-yoga', 'packers-movers', 'event-photography',
-      'makeup-artist', 'solar-panel'
+    const categorySlugsList = Object.keys(catMap);
+
+    const providerNames = [
+      // 40 Lucknow Specific Providers
+      { name: 'Lucknow Cool Tech AC', cat: 'ac-repair', city: 'Lucknow', localityIdx: 0, rating: 4.9, reviews: 184, price: 499, exp: 8 },
+      { name: 'Gomti Nagar Plumbing Solutions', cat: 'plumbing', city: 'Lucknow', localityIdx: 1, rating: 4.8, reviews: 142, price: 299, exp: 6 },
+      { name: 'Indira Electricians & Wiring', cat: 'electrical-services', city: 'Lucknow', localityIdx: 2, rating: 4.7, reviews: 98, price: 199, exp: 9 },
+      { name: 'Awadh Deep Cleaning Squad', cat: 'home-cleaning', city: 'Lucknow', localityIdx: 6, rating: 4.9, reviews: 210, price: 1499, exp: 5 },
+      { name: 'Hazratganj Appliance Care', cat: 'appliance-repair', city: 'Lucknow', localityIdx: 3, rating: 4.6, reviews: 88, price: 349, exp: 7 },
+      { name: 'Royal Awadh Salon at Home', cat: 'beauty-salon', city: 'Lucknow', localityIdx: 0, rating: 4.9, reviews: 312, price: 599, exp: 10 },
+      { name: 'Lucknow Genius Home Tutors', cat: 'tutoring', city: 'Lucknow', localityIdx: 4, rating: 4.8, reviews: 65, price: 600, exp: 12 },
+      { name: 'Gomti Auto Repair & Garage', cat: 'car-bike-repair', city: 'Lucknow', localityIdx: 1, rating: 4.7, reviews: 154, price: 399, exp: 9 },
+      { name: 'Aliganj Express Painters', cat: 'painting', city: 'Lucknow', localityIdx: 4, rating: 4.8, reviews: 118, price: 2199, exp: 11 },
+      { name: 'Chinhat Wooden Crafts & Furniture', cat: 'carpentry', city: 'Lucknow', localityIdx: 6, rating: 4.6, reviews: 76, price: 299, exp: 8 },
+      { name: 'Nawab Tech Laptop & Mobile Repair', cat: 'laptop-mobile-repair', city: 'Lucknow', localityIdx: 3, rating: 4.8, reviews: 190, price: 499, exp: 7 },
+      { name: 'Lucknow Safe Vision CCTV', cat: 'cctv-installation', city: 'Lucknow', localityIdx: 5, rating: 4.7, reviews: 84, price: 3499, exp: 6 },
+      { name: 'Gomti Pest Free Solutions', cat: 'pest-control', city: 'Lucknow', localityIdx: 0, rating: 4.9, reviews: 130, price: 999, exp: 8 },
+      { name: 'Pure Jal RO Services Lucknow', cat: 'ro-water-purifier', city: 'Lucknow', localityIdx: 2, rating: 4.8, reviews: 162, price: 399, exp: 5 },
+      { name: 'Shine & Drive Doorstep Car Wash', cat: 'car-wash-detailing', city: 'Lucknow', localityIdx: 6, rating: 4.9, reviews: 240, price: 499, exp: 4 },
+      { name: 'Awadh Fitness & Yoga Trainer', cat: 'fitness-yoga', city: 'Lucknow', localityIdx: 1, rating: 4.9, reviews: 72, price: 800, exp: 7 },
+      { name: 'Lucknow City Packers & Movers', cat: 'packers-movers', city: 'Lucknow', localityIdx: 9, rating: 4.7, reviews: 145, price: 2500, exp: 10 },
+      { name: 'Royal Memories Studio Lucknow', cat: 'event-photography', city: 'Lucknow', localityIdx: 3, rating: 4.9, reviews: 94, price: 7999, exp: 9 },
+      { name: 'Awadhi Glam Bridal Makeup Studio', cat: 'makeup-artist', city: 'Lucknow', localityIdx: 0, rating: 4.9, reviews: 280, price: 3999, exp: 8 },
+      { name: 'Surya Power Solar Lucknow', cat: 'solar-panel', city: 'Lucknow', localityIdx: 7, rating: 4.8, reviews: 45, price: 120000, exp: 6 },
+      { name: 'Master Pipe Fixer Lucknow', cat: 'plumbing', city: 'Lucknow', localityIdx: 6, rating: 4.7, reviews: 105, price: 249, exp: 9 },
+      { name: 'PowerGrid Electricals Gomti Nagar', cat: 'electrical-services', city: 'Lucknow', localityIdx: 0, rating: 4.8, reviews: 175, price: 199, exp: 12 },
+      { name: 'ChillZone AC Technicians', cat: 'ac-repair', city: 'Lucknow', localityIdx: 6, rating: 4.9, reviews: 295, price: 549, exp: 10 },
+      { name: 'Sparkle Clean Home Services', cat: 'home-cleaning', city: 'Lucknow', localityIdx: 1, rating: 4.8, reviews: 160, price: 1299, exp: 4 },
+      { name: 'QuickFix Refrigerator & Washing Machine', cat: 'appliance-repair', city: 'Lucknow', localityIdx: 5, rating: 4.7, reviews: 112, price: 399, exp: 8 },
+      { name: 'Glow & Grace Home Salon', cat: 'beauty-salon', city: 'Lucknow', localityIdx: 2, rating: 4.9, reviews: 215, price: 499, exp: 6 },
+      { name: 'Lucknow Scholars Home Tuition', cat: 'tutoring', city: 'Lucknow', localityIdx: 0, rating: 4.8, reviews: 55, price: 700, exp: 14 },
+      { name: 'Speedy Mechanic Bike & Car', cat: 'car-bike-repair', city: 'Lucknow', localityIdx: 9, rating: 4.6, reviews: 135, price: 299, exp: 7 },
+      { name: 'Colors of Awadh Painting', cat: 'painting', city: 'Lucknow', localityIdx: 7, rating: 4.8, reviews: 92, price: 2499, exp: 13 },
+      { name: 'WoodCraft Carpenter Aliganj', cat: 'carpentry', city: 'Lucknow', localityIdx: 4, rating: 4.7, reviews: 81, price: 350, exp: 15 },
+      { name: 'Gomti Mobile Screen & Battery', cat: 'laptop-mobile-repair', city: 'Lucknow', localityIdx: 0, rating: 4.8, reviews: 220, price: 699, exp: 8 },
+      { name: 'Secure Home CCTV Lucknow', cat: 'cctv-installation', city: 'Lucknow', localityIdx: 6, rating: 4.9, reviews: 68, price: 2999, exp: 5 },
+      { name: 'BugShield Pest Control Lucknow', cat: 'pest-control', city: 'Lucknow', localityIdx: 1, rating: 4.8, reviews: 140, price: 899, exp: 7 },
+      { name: 'AquaPure Filter Experts', cat: 'ro-water-purifier', city: 'Lucknow', localityIdx: 6, rating: 4.7, reviews: 178, price: 499, exp: 9 },
+      { name: 'SuperFoam Car Wash Gomti Nagar', cat: 'car-wash-detailing', city: 'Lucknow', localityIdx: 0, rating: 4.9, reviews: 195, price: 399, exp: 3 },
+      { name: 'FitNawab Yoga Instructor', cat: 'fitness-yoga', city: 'Lucknow', localityIdx: 2, rating: 4.9, reviews: 88, price: 900, exp: 6 },
+      { name: 'Metro Express Packers Lucknow', cat: 'packers-movers', city: 'Lucknow', localityIdx: 8, rating: 4.6, reviews: 110, price: 2200, exp: 11 },
+      { name: 'Candid Awadh Photography', cat: 'event-photography', city: 'Lucknow', localityIdx: 0, rating: 4.9, reviews: 125, price: 8500, exp: 8 },
+      { name: 'Chic Touch Hair & Makeup', cat: 'makeup-artist', city: 'Lucknow', localityIdx: 3, rating: 4.8, reviews: 190, price: 3499, exp: 7 },
+      { name: 'GreenSun Solar Solutions', cat: 'solar-panel', city: 'Lucknow', localityIdx: 1, rating: 4.7, reviews: 38, price: 135000, exp: 5 }
     ];
 
-    const namesSeed = [
-      'Rahul Sharma', 'Amit Verma', 'Sanjay Kumar', 'Priya Kapoor', 'Deepak Yadav',
-      'Rohan Gupta', 'Dr. Alok Nath', 'Vikas Auto', 'Manish Carpenter', 'Ramesh Painters',
-      'Suresh Singh', 'Karan Malhotra', 'Sunita Beauty', 'Harish Electric', 'CleanSquad',
-      'Gaurav Mechanic', 'Neha Tutor', 'Satish Fix', 'Woodland Crafts', 'Perfect Colors',
-      'Anand Tech', 'Sunil Plumbing', 'Pooja Makeup', 'Vikram Solar', 'Tarun Cameras',
-      'Neeraj Packers', 'Shruti Yoga', 'Rajiv Repair', 'Nitin Pest Control', 'Arjun Detailing',
-      'Bhavna Salon', 'Chetan Tutors', 'Dinesh Electricals', 'Ekta Beauty', 'Farhan AC Care',
-      'Girish Plumber', 'Himanshu Auto', 'Isha Studio', 'Jitin Services', 'Kavita Clean',
-      'Lokesh Tech', 'Mayank Solar', 'Nisha Spa', 'Om Prakash', 'Pradeep RO',
-      'Qasim Repair', 'Ritu Tutors', 'Sachin Movers', 'Trupti Beauty', 'Umesh Paint',
-      'Varun CCTV', 'Yash Mobile', 'Zubair Plumbing', 'Abhay Electric', 'Bala Carpentry',
-      'Chandan AC', 'Divya Hair', 'Eshwar Auto', 'Geeta Fitness', 'Hemant Pest',
-      'Inder Water', 'Jaya Photo', 'Kapil Tech', 'Lata Salon', 'Mohit Solar',
-      'Naveen Movers', 'Ojas Tutors', 'Preeti Makeup', 'Rakesh Plumber', 'Suraj AC',
-      'Tanvi Spa', 'Upendra Electric', 'Vineet Auto', 'Yogesh Cleaners', 'Aarti Tutor',
-      'Bhavesh Repair', 'Charu Beauty', 'Dhiraj Solar', 'Gautam Packers', 'Ishita Photo',
-      'Jagdish Pest', 'Kiran RO', 'Lalit Detailing', 'Monika Salon', 'Nandan Paint',
-      'Omkar Carpentry', 'Parul Tutors', 'Raman Electric', 'Seema Clean', 'Tushar Tech',
-      'Utkarsh CCTV', 'Vandana Makeup', 'Wasim Plumber', 'Yuvraj Auto', 'Zaheer Solar',
-      'Aakash Repair', 'Brijesh AC', 'Chetna Fitness', 'Devendra Packers', 'Gargi Studio'
+    // Add 80 NCR & Other Regional Providers
+    const ncrNamesSeed = [
+      'Rahul Electricals', 'Amit Plumbing Noida', 'Sanjay AC Care Delhi', 'Priya Salon Gurgaon', 'Deepak Pest Control Ghaziabad',
+      'Rohan Carpenter Gr Noida', 'Vikas Auto Noida', 'Manish Painters Delhi', 'Ramesh Water Filter Gurgaon', 'CleanSquad Noida',
+      'Gaurav Mechanic Delhi', 'Neha Tutor Gurgaon', 'Satish Fix Ghaziabad', 'Woodland Crafts Noida', 'Perfect Colors Delhi',
+      'Anand Tech Gurgaon', 'Sunil Plumbing Noida', 'Pooja Makeup Delhi', 'Vikram Solar Gurgaon', 'Tarun Cameras Ghaziabad',
+      'Neeraj Packers Noida', 'Shruti Yoga Delhi', 'Rajiv Repair Gurgaon', 'Nitin Pest Control Noida', 'Arjun Detailing Delhi',
+      'Bhavna Salon Gurgaon', 'Chetan Tutors Noida', 'Dinesh Electricals Delhi', 'Ekta Beauty Gurgaon', 'Farhan AC Care Noida',
+      'Girish Plumber Delhi', 'Himanshu Auto Gurgaon', 'Isha Studio Noida', 'Jitin Services Delhi', 'Kavita Clean Gurgaon',
+      'Lokesh Tech Noida', 'Mayank Solar Delhi', 'Nisha Spa Gurgaon', 'Om Prakash Plumber Noida', 'Pradeep RO Delhi',
+      'Qasim Repair Gurgaon', 'Ritu Tutors Noida', 'Sachin Movers Delhi', 'Trupti Beauty Gurgaon', 'Umesh Paint Noida',
+      'Varun CCTV Delhi', 'Yash Mobile Gurgaon', 'Zubair Plumbing Noida', 'Abhay Electric Delhi', 'Bala Carpentry Gurgaon',
+      'Chandan AC Care Noida', 'Divya Hair Studio Delhi', 'Eshwar Auto Gurgaon', 'Geeta Fitness Noida', 'Hemant Pest Delhi',
+      'Inder Water Gurgaon', 'Jaya Photo Noida', 'Kapil Tech Delhi', 'Lata Salon Gurgaon', 'Mohit Solar Noida',
+      'Naveen Movers Delhi', 'Ojas Tutors Gurgaon', 'Preeti Makeup Noida', 'Rakesh Plumber Delhi', 'Suraj AC Gurgaon',
+      'Tanvi Spa Noida', 'Upendra Electric Delhi', 'Vineet Auto Gurgaon', 'Yogesh Cleaners Noida', 'Aarti Tutor Delhi',
+      'Bhavesh Repair Gurgaon', 'Charu Beauty Noida', 'Dhiraj Solar Delhi', 'Gautam Packers Gurgaon', 'Ishita Photo Noida',
+      'Jagdish Pest Delhi', 'Kiran RO Gurgaon', 'Lalit Detailing Noida', 'Monika Salon Delhi', 'Nandan Paint Gurgaon'
     ];
+
+    ncrNamesSeed.forEach((name, idx) => {
+      const cityObj = ncrCities[idx % ncrCities.length];
+      const catSlug = categorySlugsList[idx % categorySlugsList.length];
+      providerNames.push({
+        name: name,
+        cat: catSlug,
+        city: cityObj.city,
+        state: cityObj.state,
+        lat: cityObj.lat + (Math.sin(idx) * 0.04),
+        lng: cityObj.lng + (Math.cos(idx) * 0.04),
+        rating: Math.round((4.2 + (idx % 8) * 0.1) * 10) / 10,
+        reviews: 25 + (idx * 11) % 250,
+        price: 199 + (idx % 10) * 100,
+        exp: 3 + (idx % 12)
+      });
+    });
 
     let createdProviders = [];
 
-    for (let i = 0; i < namesSeed.length; i++) {
-      const name = namesSeed[i];
-      const catSlug = categorySlugsList[i % categorySlugsList.length];
-      const cityObj = targetCities[i % targetCities.length];
-      const catObjId = catMap[catSlug] || createdCategories[0]._id;
+    for (let i = 0; i < providerNames.length; i++) {
+      const item = providerNames[i];
+      let pLat, pLng, pCity, pState, pAddress;
 
-      // Small geographic offset for realistic distribution around city center
-      const latOffset = (Math.sin(i) * 0.04);
-      const lngOffset = (Math.cos(i) * 0.04);
+      if (item.city === 'Lucknow') {
+        const loc = lucknowLocalities[item.localityIdx !== undefined ? item.localityIdx : (i % lucknowLocalities.length)];
+        // Add tiny realistic offset within 1.5 km of locality center
+        const offsetLat = (Math.sin(i * 1.7) * 0.012);
+        const offsetLng = (Math.cos(i * 1.7) * 0.012);
+        pLat = loc.lat + offsetLat;
+        pLng = loc.lng + offsetLng;
+        pCity = 'Lucknow';
+        pState = 'Uttar Pradesh';
+        pAddress = `${loc.locality}, Lucknow, Uttar Pradesh`;
+      } else {
+        pLat = item.lat;
+        pLng = item.lng;
+        pCity = item.city;
+        pState = item.state || 'Uttar Pradesh';
+        pAddress = `Sector ${10 + (i % 50)}, ${pCity}, ${pState}`;
+      }
+
+      const catObjId = catMap[item.cat] || createdCategories[0]._id;
+      const catObj = categoriesData.find(c => c.slug === item.cat) || categoriesData[0];
 
       const user = await User.create({
-        name: name,
+        name: item.name.split(' ')[0] + ' ' + (item.name.split(' ')[1] || 'Pro'),
         email: `provider_${i + 1}@localservice.com`,
         password: 'provider123',
         phone: `+91 98${Math.floor(10000000 + Math.random() * 90000000)}`,
@@ -228,42 +306,37 @@ const seedData = async () => {
         profileImage: `https://i.pravatar.cc/300?img=${(i % 70) + 1}`
       });
 
-      const basePrice = 199 + (i % 8) * 100;
-      const ratingVal = Math.round((4.0 + (i % 10) * 0.1) * 10) / 10;
-      const reviewCountVal = 10 + (i * 7) % 300;
-
       const provider = await Provider.create({
         user: user._id,
-        businessName: `${name.split(' ')[0]} ${categoriesData.find(c => c.slug === catSlug)?.name || 'Local'} Services`,
-        description: `Verified professional ${name} providing expert services across ${cityObj.city} with over ${3 + (i % 12)} years of experience.`,
+        businessName: item.name,
+        description: `Top-rated professional service provider in ${pCity} with over ${item.exp} years of verified experience. Specializing in high-quality doorstep ${catObj.name.toLowerCase()}.`,
         category: catObjId,
         servicesOffered: [
-          { name: `Standard ${categoriesData.find(c => c.slug === catSlug)?.name || 'Service'}`, price: basePrice, description: 'Diagnostic and standard service work.' },
-          { name: `Express Premium Package`, price: basePrice + 250, description: 'Priority doorstep delivery with premium parts.' }
+          { name: `Standard ${catObj.name}`, price: item.price, description: 'Diagnostic check and standard service.' },
+          { name: `Premium Full Service`, price: item.price + 350, description: 'Comprehensive doorstep service package with extended warranty.' }
         ],
-        experienceYears: 3 + (i % 12),
-        startingPrice: basePrice,
-        coverImage: `https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=1000`,
+        experienceYears: item.exp,
+        startingPrice: item.price,
+        coverImage: catObj.image,
         location: {
           type: 'Point',
-          coordinates: [cityObj.lng + lngOffset, cityObj.lat + latOffset],
-          formattedAddress: `Sector ${10 + (i % 40)}, ${cityObj.city}, ${cityObj.state}`,
-          city: cityObj.city,
-          state: cityObj.state
+          coordinates: [pLng, pLat],
+          formattedAddress: pAddress,
+          city: pCity,
+          state: pState
         },
-        serviceAreaRadiusKm: 10 + (i % 15),
-        workingHours: 'Mon-Sat: 9:00 AM - 8:00 PM',
+        serviceAreaRadiusKm: 25,
+        workingHours: 'Mon-Sat: 8:00 AM - 9:00 PM',
         isAvailable: true,
         gallery: [
-          'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&q=80&w=500',
-          'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=500'
+          catObj.image,
+          'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600'
         ],
-        verificationStatus: (i % 15 === 0) ? 'pending' : ((i % 25 === 0) ? 'rejected' : 'approved'),
-        verificationDocumentUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=400',
-        isFeatured: (i % 5 === 0),
-        rating: ratingVal > 5 ? 5.0 : ratingVal,
-        reviewCount: reviewCountVal,
-        totalJobsCompleted: reviewCountVal + 20
+        verificationStatus: 'approved',
+        isFeatured: (i % 4 === 0),
+        rating: item.rating > 5 ? 5.0 : item.rating,
+        reviewCount: item.reviews,
+        totalJobsCompleted: item.reviews + 15
       });
 
       createdProviders.push(provider);
@@ -281,8 +354,8 @@ const seedData = async () => {
 
     const demoProvider = await Provider.create({
       user: demoProviderUser._id,
-      businessName: 'Rahul Electrical & AC Services',
-      description: 'Certified Master Electrician and AC repair technician serving Noida Sector 62 & nearby areas. 8 years experience in commercial & domestic repairs.',
+      businessName: 'Rahul Electrical & AC Services Lucknow',
+      description: 'Master Electrician and AC repair technician serving Gomti Nagar, Hazratganj & all Lucknow areas. 8 years experience in commercial & domestic repairs.',
       category: catMap['electrical-services'],
       servicesOffered: [
         { name: 'Electrical Switchboard Fix', price: 199, description: 'Fix burnt wiring and switch sockets.' },
@@ -294,13 +367,13 @@ const seedData = async () => {
       coverImage: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=1200',
       location: {
         type: 'Point',
-        coordinates: [77.3726, 28.6270],
-        formattedAddress: 'Sector 62, Noida, Uttar Pradesh',
-        city: 'Noida',
+        coordinates: [81.0450, 26.8950],
+        formattedAddress: 'Gomti Nagar, Lucknow, Uttar Pradesh',
+        city: 'Lucknow',
         state: 'Uttar Pradesh'
       },
-      serviceAreaRadiusKm: 20,
-      workingHours: 'Mon-Sat: 9:00 AM - 7:00 PM',
+      serviceAreaRadiusKm: 25,
+      workingHours: 'Mon-Sat: 9:00 AM - 8:00 PM',
       isAvailable: true,
       gallery: [
         'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
@@ -308,7 +381,7 @@ const seedData = async () => {
       ],
       verificationStatus: 'approved',
       isFeatured: true,
-      rating: 4.8,
+      rating: 4.9,
       reviewCount: 246,
       totalJobsCompleted: 260
     });
@@ -324,10 +397,10 @@ const seedData = async () => {
       bookingDate: '2026-08-15',
       bookingTime: '04:00 PM',
       address: {
-        street: 'Flat 402, Block B, Royal Palms, Sector 62',
-        city: 'Noida',
+        street: 'Flat 402, Block B, Riverside Apartments, Gomti Nagar',
+        city: 'Lucknow',
         state: 'Uttar Pradesh',
-        pincode: '201301',
+        pincode: '226010',
         phone: '+91 91234 56789'
       },
       price: 398,
@@ -351,39 +424,12 @@ const seedData = async () => {
       provider: demoProvider._id,
       booking: sampleBooking._id,
       rating: 5,
-      comment: 'Rahul arrived right on time, had all professional tools, and installed both fans very neatly within 45 minutes! Highly recommended.',
+      comment: 'Rahul arrived right on time, had all professional tools, and installed both fans very neatly within 45 minutes! Highly recommended in Gomti Nagar.',
       images: ['https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400']
     });
 
-    await Booking.create({
-      bookingId: '#LSF10488',
-      customer: demoCustomer._id,
-      provider: demoProvider._id,
-      serviceName: 'AC Deep Foam Jet Cleaning',
-      description: 'Split AC is not cooling properly and making slight noise. Needs deep foam cleaning.',
-      bookingDate: '2026-08-16',
-      bookingTime: '02:30 PM',
-      address: {
-        street: 'Flat 402, Block B, Royal Palms, Sector 62',
-        city: 'Noida',
-        state: 'Uttar Pradesh',
-        pincode: '201301',
-        phone: '+91 91234 56789'
-      },
-      price: 499,
-      commissionPercentage: 10,
-      platformFee: 50,
-      providerEarnings: 449,
-      status: 'Pending',
-      statusHistory: [
-        { status: 'Pending', timestamp: new Date(), note: 'Booking requested by customer' }
-      ],
-      paymentStatus: 'Pending',
-      hasReview: false
-    });
-
     console.log('✅ Database Seeding Completed Successfully!');
-    console.log(`📊 Total Seeded: ${createdCategories.length} Categories, ${servicesData.length} Services, ${createdProviders.length + 1} Providers.`);
+    console.log(`📊 Total Seeded: ${createdCategories.length} Categories, ${servicesData.length} Services, ${createdProviders.length + 1} Providers (${providerNames.filter(p => p.city === 'Lucknow').length + 1} in Lucknow).`);
     console.log('==================================================');
     console.log('Test Login Credentials:');
     console.log('1. Admin:    admin@localservicefinder.com  / admin123');
