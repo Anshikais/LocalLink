@@ -59,54 +59,8 @@ LocalLink/
 │
 ├── .gitignore
 └── README.md
-⚙️ Getting Started
-Prerequisites
 
-Make sure you have installed:
-
-Node.js
-npm
-MongoDB
-Git
-📥 Installation
-1. Clone the repository
-git clone https://github.com/Anshikais/LocalLink.git
-
-Move into the project:
-
-cd LocalLink
-2. Install Frontend Dependencies
-cd client
-npm install
-3. Install Backend Dependencies
-
-Open another terminal or move back to the root:
-
-cd ../server
-npm install
-🔐 Environment Variables
-
-Create a .env file inside the server directory.
-
-Use the provided example:
-
-server/.env.example
-
-Add the required environment variables according to the backend configuration.
-
-Important
-
-Never commit your .env file to GitHub.
-
-Sensitive information such as:
-
-MongoDB credentials
-JWT secrets
-API keys
-Database URLs
-
-should remain inside environment variables.
-
+```
 ▶️ Running the Application
 Start Backend
 
@@ -120,34 +74,11 @@ npm run
 Start Frontend
 
 Open another terminal:
-
-cd client
 npm run dev
-
-The frontend will normally run on:
-
-http://localhost:5173
-
-The backend will run on the port configured in the server environment.
 
 🗄️ Database
 
-LocalLink uses MongoDB as the main source of truth.
-
-The application stores data for:
-
-Users
-Providers
-Categories
-Services
-Bookings
-Reviews
-Notifications
-Settings
-
-The frontend does not need to hardcode service/provider data.
-
-Instead:
+LocalLink uses MongoDB 
 
 MongoDB
    ↓
@@ -274,24 +205,6 @@ The Haversine formula is used by the backend utility to calculate geographical d
 
 This enables radius-based provider discovery.
 
-🌱 Development Seed Data
-
-The project contains a development seed utility for populating sample data.
-
-This can be used during development to create multiple:
-
-Categories
-Services
-Providers
-
-Before running seed scripts, check the available scripts in:
-
-server/package.json
-⚠️ Warning
-
-Seed scripts should be used carefully.
-
-Do not run development seed operations against a production database unless the script is specifically designed for that purpose.
 
 🔒 Security
 
@@ -359,36 +272,6 @@ Potential future improvements include:
 Advanced service filtering
 Better provider recommendations
 Real-time notifications
-Improved booking management
-Provider verification
-Online payments
-Advanced analytics
-Map-based provider discovery
-Improved reviews and reputation system
-Production deployment
-Mobile application
-🤝 Contributing
-
-Contributions and suggestions are welcome.
-
-To contribute:
-
-git clone https://github.com/Anshikais/LocalLink.git
-
-Create a new branch:
-
-git checkout -b feature/your-feature
-
-Make your changes and commit:
-
-git add .
-git commit -m "Add your feature"
-
-Push your branch:
-
-git push origin feature/your-feature
-
-Then create a Pull Request.
 
 📌 Project Status
 
