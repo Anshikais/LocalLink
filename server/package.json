@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "build": "echo 'Server build complete'",
+    "build": "cd ../client && npm install && npm run build",
     "start": "node server.js",
     "dev": "node server.js",
     "seed": "node utils/seed.js"
