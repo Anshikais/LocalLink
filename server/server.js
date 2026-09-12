@@ -48,18 +48,28 @@ async function connectDatabase() {
     return;
   }
 
-  const uri = process.env.MONGO_URI;
+  const uri =
+    process.env.MONGO_URI ||
+    process.env.MONGODB_URI ||
+    process.env.DATABASE_URL ||
+    process.env.MONGO_URL ||
+    process.env.MONGODB_URL;
 
   if (!uri) {
     throw new Error(
-      'MONGO_URI environment variable is not configured.'
+      'MongoDB connection URI is not configured (checked MONGO_URI, MONGODB_URI, DATABASE_URL, MONGO_URL).'
     );
   }
 
-  // Clean URI if angle brackets were accidentally preserved from Atlas UI
-  let cleanUri = uri;
-  if (cleanUri.includes('<Locallink123>')) {
-    cleanUri = cleanUri.replace('<Locallink123>', 'Locallink123');
+  // Clean URI if angle brackets were accidentally preserved from Atlas UI template (<password>)
+  let cleanUri = uri.trim();
+  cleanUri = cleanUri.replace(/:<([^>]+)>/g, ':$1');
+  cleanUri = cleanUri.replace(/<([^>]+)>/g, '$1');
+
+  // Ensure authSource=admin parameter for MongoDB Atlas authentication
+  if (cleanUri.includes('mongodb+srv://') && !cleanUri.includes('authSource=')) {
+    const separator = cleanUri.includes('?') ? '&' : '?';
+    cleanUri = `${cleanUri}${separator}authSource=admin`;
   }
 
   try {
