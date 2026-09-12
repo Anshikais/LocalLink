@@ -38,6 +38,61 @@ app.use(
 );
 
 // ================================
+// Database Connection & Middleware
+// ================================
+
+let dbPromise = null;
+
+async function connectDatabase() {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  const uri = process.env.MONGO_URI;
+
+  if (!uri) {
+    throw new Error(
+      'MONGO_URI environment variable is not configured.'
+    );
+  }
+
+  // Clean URI if angle brackets were accidentally preserved from Atlas UI
+  let cleanUri = uri;
+  if (cleanUri.includes('<Locallink123>')) {
+    cleanUri = cleanUri.replace('<Locallink123>', 'Locallink123');
+  }
+
+  try {
+    if (!dbPromise || mongoose.connection.readyState === 0) {
+      dbPromise = mongoose.connect(cleanUri, {
+        serverSelectionTimeoutMS: 10000,
+      });
+    }
+
+    await dbPromise;
+    console.log('✅ Connected to MongoDB Atlas');
+  } catch (error) {
+    dbPromise = null;
+    console.error('❌ MongoDB connection failed:', error.message);
+    throw error;
+  }
+}
+
+// Middleware to ensure DB connection per request (essential for Serverless)
+app.use(async (req, res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (err) {
+    console.error('Database connection middleware error:', err.message);
+    res.status(500).json({
+      error: 'Database Connection Error',
+      message: err.message,
+    });
+  }
+});
+
+// ================================
 // Routes
 // ================================
 
@@ -93,33 +148,6 @@ app.use((err, req, res, next) => {
 });
 
 // ================================
-// Database Connection
-// ================================
-
-async function connectDatabase() {
-  const uri = process.env.MONGO_URI;
-
-  if (!uri) {
-    throw new Error(
-      'MONGO_URI environment variable is not configured.'
-    );
-  }
-
-  try {
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 10000,
-    });
-
-    console.log('✅ Connected to MongoDB Atlas');
-  } catch (error) {
-    console.error('❌ MongoDB connection failed');
-    console.error(error.message);
-
-    throw error;
-  }
-}
-
-// ================================
 // Seed Database
 // ================================
 
@@ -146,41 +174,43 @@ async function seedDatabase() {
     }
   } catch (error) {
     console.error('⚠️ Database seeding failed:', error.message);
-
-    // Do not crash the entire server because of seed failure
   }
 }
 
 // ================================
-// Start Server
+// Start Server (Only for direct standalone execution)
 // ================================
 
-async function startServer() {
-  try {
-    await connectDatabase();
+if (require.main === module) {
+  async function startServer() {
+    try {
+      await connectDatabase();
 
-    await seedDatabase();
+      await seedDatabase();
 
-    app.listen(PORT, () => {
-      console.log(
-        `🚀 Local Service Finder API running on port ${PORT}`
+      app.listen(PORT, () => {
+        console.log(
+          `🚀 Local Service Finder API running on port ${PORT}`
+        );
+
+        console.log(
+          `🔗 API Base URL: http://localhost:${PORT}/api`
+        );
+      });
+    } catch (error) {
+      console.error(
+        '❌ Server startup failed:',
+        error.message
       );
 
-      console.log(
-        `🔗 API Base URL: http://localhost:${PORT}/api`
-      );
-    });
-  } catch (error) {
-    console.error(
-      '❌ Server startup failed:',
-      error.message
-    );
-
-    process.exit(1);
+      process.exit(1);
+    }
   }
+
+  startServer();
 }
 
-startServer();
+module.exports = app;
 
 // ================================
 // Graceful Shutdown
