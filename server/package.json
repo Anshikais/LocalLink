@@ -5,6 +5,7 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
+    "build": "echo 'Server build complete'",
     "start": "node server.js",
     "dev": "node server.js",
     "seed": "node utils/seed.js"
