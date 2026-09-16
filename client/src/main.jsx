@@ -10,10 +10,17 @@ import { LocationProvider } from './context/LocationContext';
 import { NotificationProvider } from './context/NotificationContext';
 
 // Configure global Axios API Base URL for Production & Development
-axios.defaults.baseURL = import.meta.env.VITE_API_URL ||
+let rawBaseUrl = import.meta.env.VITE_API_URL ||
   (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
     ? 'https://server-two-pink-64.vercel.app'
     : '');
+
+// Strip trailing /api or / if present to prevent duplicate /api/api paths
+if (rawBaseUrl) {
+  rawBaseUrl = rawBaseUrl.replace(/\/api\/?$/, '').replace(/\/+$/, '');
+}
+
+axios.defaults.baseURL = rawBaseUrl;
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
